@@ -17,14 +17,26 @@ export function chunkScript(script) {
   let current = [];
   for (const word of words) {
     current.push(word);
-    const endsClause = /[.,!?:;—-]$/.test(word);
-    if ((endsClause && current.length >= MIN_BREAK_WORDS) || current.length >= MAX_WORDS) {
+    // Sentence enders always break (never merge "description. So" into one
+    // caption); soft clause breaks only once the chunk has some meat.
+    const hardBreak = /[.!?]$/.test(word);
+    const softBreak = /[,;:—-]$/.test(word) && current.length >= MIN_BREAK_WORDS;
+    if (hardBreak || softBreak || current.length >= MAX_WORDS) {
       chunks.push(current);
       current = [];
     }
   }
   if (current.length > 0) chunks.push(current);
   return chunks;
+}
+
+// What actually gets displayed: keep ! and ? (punchy), drop dangling
+// dashes/commas/periods on either end.
+function displayText(chunkWords) {
+  return chunkWords
+    .join(" ")
+    .replace(/^[—\-\s]+/, "")
+    .replace(/[.,;:—\-\s]+$/, "");
 }
 
 export function timedChunks(script, voiceDurationSec) {
@@ -34,14 +46,12 @@ export function timedChunks(script, voiceDurationSec) {
 
   const perWord = voiceDurationSec / totalWords;
   let cursor = LEAD_IN_SEC;
-  return chunks.map((chunkWords) => {
-    const start = cursor;
-    const end = cursor + chunkWords.length * perWord;
-    cursor = end;
-    return {
-      text: chunkWords.join(" ").replace(/[.,;:]$/, ""),
-      startSec: start,
-      endSec: end,
-    };
-  });
+  return chunks
+    .map((chunkWords) => {
+      const start = cursor;
+      const end = cursor + chunkWords.length * perWord;
+      cursor = end;
+      return { text: displayText(chunkWords), startSec: start, endSec: end };
+    })
+    .filter((c) => c.text.length > 0);
 }

@@ -99,10 +99,21 @@ function main() {
   copyFileSync(voicePath, join(STAGE_DIR, "assets", "voiceover.mp3"));
   copyFileSync(gameplayPath, join(STAGE_DIR, "assets", "gameplay.mp4"));
 
+  // Music bed: explicit musicSrc prop, else the repo's default track, else none.
+  const musicPath = props.musicSrc
+    ? resolveMedia(props.musicSrc, propsDir)
+    : join(__dirname, "assets", "music.mp3");
+  let stagedMusic = null;
+  if (musicPath && existsSync(musicPath)) {
+    copyFileSync(musicPath, join(STAGE_DIR, "assets", "music.mp3"));
+    stagedMusic = "assets/music.mp3";
+  }
+
   const finalProps = {
     ...props,
     voiceoverSrc: "assets/voiceover.mp3",
     gameplaySrc: "assets/gameplay.mp4",
+    musicSrc: stagedMusic,
     audioDurationSec,
     gameplayDurationSec,
     durationInFrames,

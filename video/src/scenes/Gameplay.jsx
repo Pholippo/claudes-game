@@ -127,11 +127,12 @@ export const Gameplay = ({
             />
           </Loop>
         ) : null}
-        {/* small overlay tag on the video itself */}
+        {/* small overlay tag on the video itself (bottom-right — the game's
+            own HUD already occupies both top corners) */}
         <div
           style={{
             position: "absolute",
-            top: 18,
+            bottom: 18,
             right: 22,
             fontSize: 26,
             letterSpacing: 3,

@@ -29,6 +29,7 @@ export const Daily = ({
   script,
   voiceoverSrc,
   gameplaySrc,
+  musicSrc,
   isIntro,
   audioDurationSec = 0,
   gameplayDurationSec = 22,
@@ -48,12 +49,27 @@ export const Daily = ({
 
   const voice = resolveSrc(voiceoverSrc);
   const gameplay = resolveSrc(gameplaySrc);
+  const music = resolveSrc(musicSrc);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#05060a" }}>
       <Background />
 
       {voice ? <Audio src={voice} /> : null}
+      {music ? (
+        // Music bed, ducked under the voiceover, fading in/out at the edges.
+        <Audio
+          src={music}
+          volume={(f) =>
+            interpolate(
+              f,
+              [0, 18, durationInFrames - 34, durationInFrames - 4],
+              [0, 0.22, 0.22, 0],
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+            )
+          }
+        />
+      ) : null}
 
       <Sequence durationInFrames={SCENE.HOOK} name="Hook">
         <Hook day={day} durationInFrames={SCENE.HOOK} />

@@ -68,8 +68,8 @@ def main():
     group.add_argument("--text-file", help="Read text from this UTF-8 file")
     parser.add_argument("--out", required=True, help="Output mp3 path")
     parser.add_argument("--voice", default=DEFAULT_VOICE, help=f"Voice (default {DEFAULT_VOICE})")
-    parser.add_argument("--rate", default="-4%", help="Speech rate, e.g. '-4%%' (slightly calm)")
-    parser.add_argument("--pitch", default="+0Hz", help="Pitch shift, e.g. '-2Hz'")
+    parser.add_argument("--rate", default="+10%", help="Speech rate, e.g. '+10%%' (energetic)")
+    parser.add_argument("--pitch", default="+2Hz", help="Pitch shift, e.g. '-2Hz'")
     args = parser.parse_args()
 
     text = args.text if args.text is not None else Path(args.text_file).read_text(encoding="utf-8")

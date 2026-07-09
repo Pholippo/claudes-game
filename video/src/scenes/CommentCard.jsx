@@ -53,7 +53,7 @@ export const CommentCard = ({ promptAuthor, promptText, isIntro, durationInFrame
           transform: `translateY(${(1 - headIn) * -50}px)`,
         }}
       >
-        TODAY'S TOP COMMENT
+        {isIntro ? "HOW IT WORKS" : "TODAY'S TOP COMMENT"}
       </div>
       <div
         style={{
@@ -64,7 +64,7 @@ export const CommentCard = ({ promptAuthor, promptText, isIntro, durationInFrame
           opacity: headIn,
         }}
       >
-        {isIntro ? "the game is brand new" : "it becomes today's feature"}
+        {isIntro ? "your prompt goes 1:1 to the AI" : "it becomes today's feature"}
       </div>
 
       {/* the comment card, YouTube style */}
@@ -118,9 +118,9 @@ export const CommentCard = ({ promptAuthor, promptText, isIntro, durationInFrame
         >
           {isIntro ? (
             <>
-              <span style={{ color: COLORS.dim }}>no comments yet — </span>
+              <span style={{ color: COLORS.dim }}>drop a prompt below — </span>
               <span style={{ color: COLORS.accent, fontWeight: 700 }}>
-                YOU write the first one
+                "add lava" · "give it a hat" · ANYTHING
               </span>
               <Caret frame={frame} />
             </>

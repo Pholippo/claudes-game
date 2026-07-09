@@ -86,7 +86,7 @@ export const CTA = ({ durationInFrames }) => {
           transform: `scale(${(0.6 + pillIn * 0.4) * pulse})`,
         }}
       >
-        play free — link in description
+        play free — link in bio
       </div>
     </AbsoluteFill>
   );
