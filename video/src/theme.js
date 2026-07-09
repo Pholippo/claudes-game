@@ -15,8 +15,9 @@ export const FONT = '"Courier New", Courier, monospace';
 export const FPS = 30;
 
 // Scene lengths in frames (gameplay scene absorbs the remainder).
+// Kept tight: 50-60% of all drop-off happens in the first 3 seconds.
 export const SCENE = {
-  HOOK: 75, // ~2.5 s
-  COMMENT: 150, // ~5 s
-  CTA: 120, // ~4 s
+  HOOK: 60, // ~2 s
+  COMMENT: 100, // ~3.3 s
+  CTA: 110, // ~3.7 s
 };

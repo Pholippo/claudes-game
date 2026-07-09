@@ -3,9 +3,10 @@ import {
   AbsoluteFill,
   Audio,
   interpolate,
+  Loop,
+  OffthreadVideo,
   Sequence,
   staticFile,
-  useCurrentFrame,
   useVideoConfig,
 } from "remotion";
 import { SCENE } from "./theme.js";
@@ -34,26 +35,40 @@ export const Daily = ({
   audioDurationSec = 0,
   gameplayDurationSec = 22,
 }) => {
-  const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
+  const { durationInFrames, fps } = useVideoConfig();
 
   const gameplayStart = SCENE.HOOK + SCENE.COMMENT;
   const gameplayFrames = Math.max(1, durationInFrames - gameplayStart - SCENE.CTA);
   const ctaStart = gameplayStart + gameplayFrames;
 
-  // Global fade to black over the final moments.
-  const endFade = interpolate(frame, [durationInFrames - 14, durationInFrames - 1], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
   const voice = resolveSrc(voiceoverSrc);
   const gameplay = resolveSrc(gameplaySrc);
   const music = resolveSrc(musicSrc);
+  const backdropLoop = Math.max(1, Math.floor((gameplayDurationSec || 22) * fps));
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#05060a" }}>
       <Background />
+
+      {/* Blurred gameplay backdrop for the whole video — the first visible frame
+          already has motion (hook text never sits on a dead background), and the
+          gameplay scene gets the standard "video echo" look behind its panel. */}
+      {gameplay ? (
+        <AbsoluteFill style={{ opacity: 0.35 }}>
+          <Loop durationInFrames={backdropLoop}>
+            <OffthreadVideo
+              src={gameplay}
+              muted
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                filter: "blur(3px) brightness(0.65)",
+              }}
+            />
+          </Loop>
+        </AbsoluteFill>
+      ) : null}
 
       {voice ? <Audio src={voice} /> : null}
       {music ? (
@@ -72,7 +87,7 @@ export const Daily = ({
       ) : null}
 
       <Sequence durationInFrames={SCENE.HOOK} name="Hook">
-        <Hook day={day} durationInFrames={SCENE.HOOK} />
+        <Hook day={day} isIntro={isIntro} durationInFrames={SCENE.HOOK} />
       </Sequence>
 
       <Sequence from={SCENE.HOOK} durationInFrames={SCENE.COMMENT} name="Comment">
@@ -99,8 +114,6 @@ export const Daily = ({
       <Sequence from={ctaStart} durationInFrames={SCENE.CTA} name="CTA">
         <CTA durationInFrames={SCENE.CTA} />
       </Sequence>
-
-      <AbsoluteFill style={{ backgroundColor: "#000", opacity: endFade, pointerEvents: "none" }} />
     </AbsoluteFill>
   );
 };

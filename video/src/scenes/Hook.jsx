@@ -3,14 +3,22 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { COLORS, FONT } from "../theme.js";
 import { DayBadge } from "../DayBadge.jsx";
 
-const LINES = [
+// Outcome-first wording: day 1 introduces the premise, every later day opens
+// with the payoff ("you commented it, the AI built it") over live gameplay.
+const INTRO_LINES = [
   { text: "AN AI", size: 150, color: COLORS.white },
   { text: "IS BUILDING", size: 118, color: COLORS.white },
   { text: "THIS GAME", size: 132, color: COLORS.accent },
 ];
-const STAGGER = 5; // frames between each line entering
+const DAILY_LINES = [
+  { text: "YOU COMMENTED IT.", size: 96, color: COLORS.white },
+  { text: "THE AI", size: 140, color: COLORS.white },
+  { text: "BUILT IT.", size: 140, color: COLORS.accent },
+];
+const STAGGER = 4; // frames between each line entering
 
-export const Hook = ({ day, durationInFrames }) => {
+export const Hook = ({ day, isIntro, durationInFrames }) => {
+  const LINES = isIntro ? INTRO_LINES : DAILY_LINES;
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 

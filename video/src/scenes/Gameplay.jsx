@@ -67,6 +67,17 @@ export const Gameplay = ({
     extrapolateRight: "clamp",
   });
 
+  // Pattern interrupt: a quick zoom punch on the gameplay panel every ~4s,
+  // alternating a slight rotation direction so it doesn't feel mechanical.
+  const PUNCH_EVERY = Math.round(fps * 3.8);
+  const punchPhase = (frame + Math.round(fps * 1.9)) % PUNCH_EVERY;
+  const punch = interpolate(punchPhase, [0, 3, 13], [0.055, 0.055, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const punchDir = Math.floor((frame + Math.round(fps * 1.9)) / PUNCH_EVERY) % 2 === 0 ? 1 : -1;
+  const punchRotate = punchDir * punch * 10;
+
   // Captions: rough per-word timing across the whole voiceover; this scene
   // shows the chunks whose window overlaps it.
   const voiceDur = audioDurationSec > 0 ? audioDurationSec : durationInFrames / fps;
@@ -114,7 +125,7 @@ export const Gameplay = ({
           border: `2px solid ${COLORS.panelBorder}`,
           boxShadow: "0 30px 90px rgba(0,0,10,0.7), 0 0 70px rgba(122,140,255,0.18)",
           opacity: enter,
-          transform: `scale(${0.9 + enter * 0.1}) translateY(${(1 - enter) * 120}px)`,
+          transform: `scale(${(0.9 + enter * 0.1) * (1 + punch)}) rotate(${punchRotate}deg) translateY(${(1 - enter) * 120}px)`,
           backgroundColor: "#000",
         }}
       >
