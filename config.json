@@ -1,0 +1,16 @@
+{
+  "channelId": "",
+  "videoIdOverride": "",
+  "maxCommentCandidates": 5,
+  "maxImplementAttempts": 3,
+  "claudeCmd": "claude",
+  "gameUrl": "https://pholippo.github.io/claudes-game/game/",
+  "repoUrl": "https://github.com/Pholippo/claudes-game",
+  "uploadDefaults": {
+    "categoryId": "20",
+    "tags": ["ai", "claude", "gamedev", "vibecoding", "aigame", "indiegame"],
+    "privacyStatus": "public",
+    "madeForKids": false,
+    "selfDeclaredAiContent": true
+  }
+}
